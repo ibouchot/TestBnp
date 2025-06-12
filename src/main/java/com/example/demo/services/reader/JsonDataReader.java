@@ -36,23 +36,6 @@ public class JsonDataReader {
                 new TypeReference<List<TransactionDto>>(){}
         );
 
-        System.out.println("first transac "+transactions.get(1));
-        return transactions;
-    }
-
-    public HasMap<TransactionDto> transactionJsonToMap() throws IOException {
-        Resource resource = resourceLoader.getResource(TRANSACTION_FILE_PATH);
-
-        if (!resource.exists()) {
-            throw new FileNotFoundException("Could not find file: " + TRANSACTION_FILE_PATH);
-        }
-
-        List<TransactionDto> transactions = objectMapper.readValue(
-                resource.getInputStream(),
-                new TypeReference<List<TransactionDto>>(){}
-        );
-
-        System.out.println("first transac "+transactions.get(1));
         return transactions;
     }
 

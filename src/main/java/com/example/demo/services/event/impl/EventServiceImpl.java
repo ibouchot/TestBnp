@@ -24,32 +24,25 @@ public class EventServiceImpl implements EventService {
 
     @Override
     public EventDto save(EventDto dto) {
-        validator.validate(dto);
-        Event event = EventDto.toEntity(dto);
-        Event savedEvent = repository.save(event);
-        return EventDto.fromEntity(savedEvent);
+
+        return dto;
     }
 
     @Override
     public List<EventDto> findAll() {
-        return repository.findAll()
-                .stream()
-                .map(EventDto::fromEntity)
-                .collect(Collectors.toList());
+        return List.of();
     }
 
     @Override
     public EventDto findById(Integer id) {
-        return repository.findById(id)
-                .map(EventDto::fromEntity)
-                .orElseThrow(() -> new EntityNotFoundException("No event found with ID: " + id));
+
+        return null;
     }
 
     @Override
     public EventDto findByEventType(String type) {
-        return repository.findByEventType(type)
-                .map(EventDto::fromEntity)
-                .orElseThrow(() -> new EntityNotFoundException("No event found with type: " + type));
+
+        return null;
     }
 
     @Override

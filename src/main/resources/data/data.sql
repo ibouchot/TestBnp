@@ -1,4 +1,4 @@
-INSERT INTO eventRef (event_id, step_code, step_rank, event_rank, event_type) VALUES (1, 'Acquisition', 2, 1, 'Reception'),
+INSERT INTO event (event_id, step_code, step_rank, event_rank, event_type) VALUES (1, 'Acquisition', 2, 1, 'Reception'),
 (2, 'Acquisition', 2, 2, 'Duplicate'),
 (3, 'Acquisition', 2, 3, 'DuplicateVerification'),
 (4, 'Acquisition', 2, 4, 'Duplicate4EyesVerification'),

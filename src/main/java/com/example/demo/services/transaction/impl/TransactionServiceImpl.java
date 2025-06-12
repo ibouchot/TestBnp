@@ -1,5 +1,6 @@
 package com.example.demo.services.transaction.impl;
 
+import com.example.demo.dto.EventDto;
 import com.example.demo.dto.TransactionDto;
 import com.example.demo.model.Transaction;
 import com.example.demo.repository.TransactionRepository;
@@ -28,10 +29,9 @@ public class TransactionServiceImpl implements TransactionService {
     @Override
     public TransactionDto save(TransactionDto dto) {
         validator.validate(dto);
-        Transaction event = TransactionDto.toEntity(dto);
-
-
-        Transaction savedTransaction = repository.save(event);
+        Transaction transaction = TransactionDto.toEntity(dto);
+        
+        Transaction savedTransaction = repository.save(transaction);
         return TransactionDto.fromEntity(savedTransaction);
     }
 
