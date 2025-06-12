@@ -7,4 +7,6 @@ public interface EventService extends AbstractService<EventDto> {
     EventDto save(EventDto dto);
 
     EventDto findByEventType(String type);
+
+    Long count();
 }

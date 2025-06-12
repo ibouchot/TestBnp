@@ -21,7 +21,6 @@ public class DataLoader implements CommandLineRunner {
 
     private final JsonDataReader dataReader;
     private final TransactionService transactionService;
-    private final EventService eventService;
 
     private static final DateTimeFormatter[] DATE_FORMATTERS = new DateTimeFormatter[]{
             DateTimeFormatter.ISO_LOCAL_DATE_TIME,                // 2025-07-07T05:56:00
@@ -31,15 +30,18 @@ public class DataLoader implements CommandLineRunner {
     public DataLoader(JsonDataReader dataReader, TransactionService transactionService, EventService eventService) {
         this.dataReader = dataReader;
         this.transactionService = transactionService;
-        this.eventService = eventService;
     }
 
 
     @Override
     public void run(String... args) throws Exception {
         try{
-            List<TransactionDto> transactions = reconciliateTransactions();
-            //loadTransactionsIntoDatabase();
+            long count = transactionService.count();
+            if (count == 0) {
+                List<TransactionDto> transactions = loadTransactions();
+            } else {
+                System.out.println("La table Transaction n'est pas vide, chargement ignoré.");
+            }
         }catch (Exception e){
             System.out.println(e.getMessage());
             e.printStackTrace();
@@ -47,24 +49,24 @@ public class DataLoader implements CommandLineRunner {
 
     }
 
-    private List<TransactionDto> loadTransactionsIntoDatabase(List<TransactionDto> transactions) throws IOException {
-        transactions.forEach(transactionService::save);
-        return transactions;
-    }
-
-    public List<TransactionDto> reconciliateTransactions() throws IOException {
+    public List<TransactionDto> loadTransactions() throws IOException {
         List<TransactionDto> transactions = dataReader.readTransactionsFromFile();
 
+        List<TransactionDto> transactionsToSave = new ArrayList<>();
         Map<String, List<TransactionDto>> chains = determineEventRank(transactions);
         for (Map.Entry<String, List<TransactionDto>> entry : chains.entrySet()) {
             List<TransactionDto> chain = entry.getValue();
-
+            String groupId = entry.getKey();
             for (int i = 0; i < chain.size(); i++) {
-                TransactionDto transaction = chain.get(i);
-
-                transactionService.save(transaction, i+1);
+                TransactionDto transactionDto = chain.get(i);
+                EventDto eventDto = new EventDto();
+                eventDto.setId(i+1);
+                transactionDto.setEvent(eventDto);
+                transactionDto.setGroupId(groupId);
+                transactionsToSave.add(transactionDto);
             }
         }
+        transactionService.saveAll(transactionsToSave);
 
         for (TransactionDto dto : transactions) {
             //dto.setDate(fixMalformedDate(dto.getDate()));

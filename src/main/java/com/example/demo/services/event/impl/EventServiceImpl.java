@@ -53,6 +53,11 @@ public class EventServiceImpl implements EventService {
     }
 
     @Override
+    public Long count() {
+        return repository.count();
+    }
+
+    @Override
     public void delete(Integer id) {
 
     }

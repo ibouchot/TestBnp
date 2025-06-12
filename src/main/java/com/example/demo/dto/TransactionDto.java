@@ -20,6 +20,7 @@ public class TransactionDto {
     private EventDto event;
     private String date;
     private boolean correct;
+    private String groupId;
 
     public static TransactionDto fromEntity(Transaction transaction) {
         if (transaction == null) return null;
@@ -29,7 +30,8 @@ public class TransactionDto {
                 transaction.getSecondaryId(),
                 EventDto.fromEntity(transaction.getEvent()),
                 transaction.getDate(),
-                transaction.isCorrect()
+                transaction.isCorrect(),
+                transaction.getGroupId()
         );
     }
 
@@ -45,6 +47,7 @@ public class TransactionDto {
 
         transaction.setDate(dto.getDate());
         transaction.setCorrect(dto.isCorrect());
+        transaction.setGroupId(dto.getGroupId());
         return transaction;
     }
 }

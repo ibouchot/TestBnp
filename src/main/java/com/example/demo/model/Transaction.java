@@ -22,5 +22,5 @@ public class Transaction {
     public Event event;
     public String date;
     private boolean correct;
-
+    private String groupId;
 }
