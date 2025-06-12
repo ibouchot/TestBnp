@@ -62,12 +62,7 @@ public class DataLoader implements CommandLineRunner {
             for (int i = 0; i < chain.size(); i++) {
                 TransactionDto transaction = chain.get(i);
 
-                EventDto eventDto = eventService.findById(i);
-                if (eventDto != null) {
-                    transaction.setEvent(eventDto);
-                }
-
-                transactionService.save(transaction);
+                transactionService.save(transaction, i+1);
             }
         }
 
@@ -113,7 +108,6 @@ public class DataLoader implements CommandLineRunner {
                 }
                 Collections.reverse(chain);
                 chains.put(lastEvent, chain);
-                System.out.println("chains.lastEvent "+ chains.get(lastEvent));
         }
         return chains;
     }

@@ -9,7 +9,11 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class EventDto {
+    private Integer id;
     private String eventType;
+
+    public EventDto(String eventType) {
+    }
 
     public static EventDto fromEntity(Event event) {
         if (event == null) return null;

@@ -17,7 +17,7 @@ public class Transaction {
     public String primaryId;
     public String secondaryId;
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "event_id")
     public Event event;
     public String date;

@@ -2,7 +2,9 @@ package com.example.demo.services.transaction.impl;
 
 import com.example.demo.dto.EventDto;
 import com.example.demo.dto.TransactionDto;
+import com.example.demo.model.Event;
 import com.example.demo.model.Transaction;
+import com.example.demo.repository.EventRepository;
 import com.example.demo.repository.TransactionRepository;
 import com.example.demo.services.event.EventService;
 import com.example.demo.services.transaction.TransactionService;
@@ -11,6 +13,7 @@ import jakarta.persistence.EntityNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -18,19 +21,20 @@ public class TransactionServiceImpl implements TransactionService {
 
     private final ObjectsValidator<TransactionDto> validator;
     private final TransactionRepository repository;
-    private final EventService eventService;
+    private final EventRepository eventRepository;
 
-    public TransactionServiceImpl(ObjectsValidator<TransactionDto> validator, TransactionRepository repository, EventService eventService) {
+    public TransactionServiceImpl(ObjectsValidator<TransactionDto> validator, TransactionRepository repository, EventService eventService, EventRepository eventRepository) {
         this.validator = validator;
         this.repository = repository;
-        this.eventService = eventService;
+        this.eventRepository = eventRepository;
     }
 
     @Override
-    public TransactionDto save(TransactionDto dto) {
+    public TransactionDto save(TransactionDto dto, int eventId) {
         validator.validate(dto);
         Transaction transaction = TransactionDto.toEntity(dto);
-        
+        Optional<Event> eventDto = eventRepository.findById(eventId);
+        eventDto.ifPresent(transaction::setEvent);
         Transaction savedTransaction = repository.save(transaction);
         return TransactionDto.fromEntity(savedTransaction);
     }
@@ -55,4 +59,8 @@ public class TransactionServiceImpl implements TransactionService {
 
     }
 
+    @Override
+    public TransactionDto save(TransactionDto dto) {
+        return null;
+    }
 }
