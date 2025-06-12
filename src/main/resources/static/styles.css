@@ -1,0 +1,11 @@
+body {
+    padding: 2rem;
+}
+
+.incorrect {
+    background-color: #fa7b8f;
+}
+
+.correct {
+    background-color: #90ff9a;
+}

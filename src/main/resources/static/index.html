@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Recherche de Transactions</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+    <link href="styles.css" rel="stylesheet">
+</head>
+<body>
+
+<div class="container">
+    <form id="transaction-form">
+        <label for="transaction-id">ID de transaction :</label>
+        <input type="text" id="transaction-id" name="transactionId" required />
+        <button type="submit">Rechercher</button>
+    </form>
+
+    <script>
+        document.getElementById('transaction-form').addEventListener('submit', function (event) {
+            event.preventDefault();
+
+            const id = document.getElementById('transaction-id').value;
+            const url = `/transactions/${encodeURIComponent(id)}`;
+
+            fetch(url)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error("Erreur HTTP " + response.status);
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    document.getElementById('result').textContent = JSON.stringify(data, null, 2);
+                })
+                .catch(error => {
+                    document.getElementById('result').textContent = "Erreur : " + error.message;
+                });
+        });
+    </script>
+
+</div>
+
+</body>
+</html>

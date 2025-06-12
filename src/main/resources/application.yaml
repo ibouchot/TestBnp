@@ -1,0 +1,15 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/db_bnp
+    driver-class-name: org.postgresql.Driver
+    username: postgres
+    password: root
+  sql:
+    init:
+      mode: always
+  jpa:
+    hibernate:
+      ddl-auto: create
+    show-sql: true     # Logs SQL queries for debugging
+    database: postgresql
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
