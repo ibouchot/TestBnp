@@ -37,7 +37,7 @@ public class DataLoader implements CommandLineRunner {
             DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss", Locale.ENGLISH)
     };
 
-    public DataLoader(JsonDataReader dataReader, TransactionService transactionService, EventService eventService) {
+    public DataLoader(JsonDataReader dataReader, TransactionService transactionService) {
         this.dataReader = dataReader;
         this.transactionService = transactionService;
     }
@@ -48,7 +48,9 @@ public class DataLoader implements CommandLineRunner {
         try{
             long count = transactionService.count();
             if (count == 0) {
+                System.out.println("Loading transactions...");
                 List<TransactionDto> transactions = loadTransactions();
+                System.out.println("Transaction loaded.");
             } else {
                 List<TransactionDto> transactions = dataReader.readTransactionsFromFile();
                 System.out.println(transactions.get(1));
@@ -107,7 +109,7 @@ public class DataLoader implements CommandLineRunner {
         }
         return false;
     }
-    private Map<String, List<TransactionDto>> determineEventRank(List<TransactionDto> transactions) {
+    public Map<String, List<TransactionDto>> determineEventRank(List<TransactionDto> transactions) {
         Map<String, List<TransactionDto>> chains = new HashMap<>();
 
         Map<String, TransactionDto> bySecondaryId = new HashMap<>();
@@ -116,7 +118,7 @@ public class DataLoader implements CommandLineRunner {
         }
 
         List<TransactionDto> roots = transactions.stream()
-                .filter(tx -> "CBAcquired".equals(tx.getEvent().getEventType()))
+                .filter(transaction -> "CBAcquired".equals(transaction.getEvent().getEventType()))
                 .collect(Collectors.toList());
 
         for (TransactionDto root : roots) {
@@ -143,7 +145,7 @@ public class DataLoader implements CommandLineRunner {
 
 
 
-    private String fixMalformedDate(String dateStr) {
+    public String fixMalformedDate(String dateStr) {
         if (dateStr == null || dateStr.isEmpty()) return null;
 
         Pattern pattern = Pattern.compile("^(\\d{4})-(\\d{2,})-(\\d{2,})T(\\d{2,}):(\\d{2})(?::(\\d{2}))?$");
@@ -171,8 +173,8 @@ public class DataLoader implements CommandLineRunner {
 
                 LocalDateTime fixedDateTime = date.atTime(hour, minute, second);
 
-                System.out.println("dateStr" + dateStr);
-                System.out.println("fixedDateTime "+ fixedDateTime);
+                //System.out.println("dateStr" + dateStr);
+                //System.out.println("fixedDateTime "+ fixedDateTime);
 
                 return fixedDateTime.format(DateTimeFormatter.ISO_LOCAL_DATE_TIME);
             } catch (DateTimeException e) {

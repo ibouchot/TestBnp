@@ -1,3 +1,6 @@
+server:
+  port: 9090
+
 spring:
   datasource:
     url: jdbc:postgresql://localhost:5432/db_bnp
@@ -10,6 +13,6 @@ spring:
   jpa:
     hibernate:
       ddl-auto: create
-    show-sql: true     # Logs SQL queries for debugging
+    show-sql: false    # Logs SQL queries for debugging
     database: postgresql
     database-platform: org.hibernate.dialect.PostgreSQLDialect

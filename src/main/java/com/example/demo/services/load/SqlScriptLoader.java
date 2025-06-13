@@ -28,8 +28,9 @@ public class SqlScriptLoader implements CommandLineRunner {
             if (count == 0) {
                 try (Connection connection = dataSource.getConnection()) {
 
+                    System.out.println("Loading events...");
                     ScriptUtils.executeSqlScript(connection, new ClassPathResource("data/data.sql"));
-                    System.out.println("Script SQL exécuté");
+                    System.out.println("Events loaded.");
                 } catch (Exception e) {
                     System.err.println("Erreur lors de l'exécution du script SQL : " + e.getMessage());
                 }
