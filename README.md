@@ -4,7 +4,9 @@
 
 ```Installer Postgres et créer une base de donnée```
 
-```Ouvrir l'archive buildé : bnp-api-test-0.0.1-SNAPSHOT.zip```
+```Télécharger l'archive sur le repo git à la racine du projet, ou cloner le projet et lancer un mvn clean install, puis la récupérer dans le dossier target```
+
+```Ouvrir l'archive buildé : bnp-api-test-0.0.1-SNAPSHOT.zip ```
 
 ```Changer les information de la database dans le fichier application.yaml ```
 
