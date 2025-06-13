@@ -17,7 +17,7 @@ public class Event {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer eventId;
     public String stepCode;
-    public String stepRank;
-    public String eventRank;
+    public Integer stepRank;
+    public Integer eventRank;
     public String eventType;
 }

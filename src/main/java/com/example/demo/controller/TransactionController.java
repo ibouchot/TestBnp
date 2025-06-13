@@ -35,12 +35,15 @@ public class TransactionController {
 
     @GetMapping("/{primaryId}")
     public ResponseEntity<List<TransactionDto>> getTransactionsById(@PathVariable String primaryId){
-        System.out.println(primaryId);
         TransactionDto transactionDto = transactionService.findByPrimaryId(primaryId);
-        System.out.println(transactionDto);
         String groupId = transactionDto.getGroupId();
         List<TransactionDto> transactions = transactionService.findTransactionByGroupId(groupId);
+        return ResponseEntity.ok(transactions);
+    }
 
+    @GetMapping("/incorrect")
+    public ResponseEntity<List<TransactionDto>> getIncorrectTransactions(){
+        List<TransactionDto> transactions = transactionService.findAllByCorrectIsFalse();
         return ResponseEntity.ok(transactions);
     }
 

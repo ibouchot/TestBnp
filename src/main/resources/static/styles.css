@@ -9,3 +9,18 @@ body {
 .correct {
     background-color: #90ff9a;
 }
+
+.row {
+    display: flex;
+    gap: 20px;
+}
+
+.left-column {
+    flex: 2;
+}
+
+.right-column {
+    flex: 1;
+    border-left: 1px solid #ccc;
+    padding-left: 20px;
+}

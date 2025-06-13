@@ -17,5 +17,8 @@ public interface TransactionService extends AbstractService<TransactionDto> {
 
     TransactionDto findByPrimaryId(String primaryId);
 
+
+    List<TransactionDto> findAllByCorrectIsFalse();
+
     Long count();
 }

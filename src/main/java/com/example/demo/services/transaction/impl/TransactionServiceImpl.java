@@ -84,6 +84,14 @@ public class TransactionServiceImpl implements TransactionService {
                 .orElseThrow(() -> new EntityNotFoundException("No transaction found with primary ID: " + primaryId));
     }
 
+    @Override
+    public List<TransactionDto> findAllByCorrectIsFalse() {
+        return repository.findAllByCorrectIsFalse()
+                .stream()
+                .map(TransactionDto::fromEntity)
+                .collect(Collectors.toList());
+    }
+
 
     @Override
     public TransactionDto findById(Integer id) {

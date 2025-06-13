@@ -10,6 +10,9 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class EventDto {
     private Integer id;
+    private String stepCode;
+    private Integer stepRank;
+    private Integer eventRank;
     private String eventType;
 
     public EventDto(String eventType) {
@@ -18,6 +21,10 @@ public class EventDto {
     public static EventDto fromEntity(Event event) {
         if (event == null) return null;
         return new EventDto(
+                event.getEventId(),
+                event.getStepCode(),
+                event.getStepRank(),
+                event.getEventRank(),
                 event.getEventType()
         );
     }
@@ -25,6 +32,10 @@ public class EventDto {
     public static Event toEntity(EventDto dto) {
         if (dto == null) return null;
         Event event = new Event();
+        event.setEventId(dto.getId());
+        event.setStepCode(dto.getStepCode());
+        event.setStepRank(dto.getStepRank());
+        event.setEventRank(dto.getEventRank());
         event.setEventType(dto.getEventType());
         return event;
     }

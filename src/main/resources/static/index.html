@@ -7,13 +7,25 @@
     <link href="styles.css" rel="stylesheet">
 </head>
 <body>
-
 <div class="container">
-    <form id="transaction-form">
-        <label for="transaction-id">ID de transaction :</label>
-        <input type="text" id="transaction-id" name="transactionId" required />
-        <button type="submit">Rechercher</button>
-    </form>
+    <div class="row">
+
+        <div class="left-column">
+            <form id="transaction-form">
+                <label for="transaction-id">ID de transaction :</label>
+                <input type="text" id="transaction-id" name="transactionId" required />
+                <button type="submit">Rechercher</button>
+            </form>
+
+            <div id="result" style="margin-top: 20px;"></div>
+        </div>
+
+
+        <div class="right-column">
+            <button onclick="loadRightTable()">Charger la liste des évenements incorrects</button>
+            <div id="right-result" style="margin-top: 20px;"></div>
+        </div>
+    </div>
 
     <script>
         document.getElementById('transaction-form').addEventListener('submit', function (event) {
@@ -30,69 +42,80 @@
                     return response.json();
                 })
                 .then(data => {
-                    document.getElementById('result').textContent = JSON.stringify(data, null, 2);
+                    console.log(data);
+                    if (!Array.isArray(data) || data.length === 0) {
+                        document.getElementById('result').innerHTML = '<p>Aucune transaction trouvée.</p>';
+                        return;
+                    }
+
+                    // Construction du tableau HTML
+                    let table = '<table class="striped">';
+                    table += '<thead><tr>' +
+                        '<th>Primary ID</th>' +
+                        '<th>Secondary ID</th>' +
+                        '<th>Event Type</th>' +
+                        '<th>Step Rank</th>' +
+                        '<th>Event Rank</th>' +
+                        '<th>Date</th>' +
+                        '<th>Old Date</th>' +
+                        '</tr></thead><tbody>';
+                    data.forEach(tx => {
+                        table += `<tr>
+                            <td>${tx.primary_id || ''}</td>
+                            <td>${tx.secondary_id || ''}</td>
+                            <td>${tx.event?.eventType || ''}</td>
+                            <td>${tx.event?.stepRank || ''}</td>
+                            <td>${tx.event?.eventRank || ''}</td>
+                            <td>${tx.date ? isNaN(new Date(tx.date).getTime())? tx.date : new Date(tx.date).getTime()  : ''}</td>
+                            <td>${tx.previousDate || ''}</td>
+                        </tr>`;
+                    });
+
+                    table += '</tbody></table>';
+
+                    document.getElementById('result').innerHTML = table;
                 })
                 .catch(error => {
-                    document.getElementById('result').textContent = "Erreur : " + error.message;
+                    document.getElementById('result').innerHTML = "<p style='color:red'>Erreur : " + error.message + "</p>";
                 });
         });
     </script>
-
-</div>
-<script>
-    document.getElementById('transaction-form').addEventListener('submit', function(event) {
-        event.preventDefault();
-
-        const id = document.getElementById('transaction-id').value.trim();
-        if (!id) return;
-
-        const url = `/transactions/${encodeURIComponent(id)}`;
-        const resultDiv = document.getElementById('result');
-
-        fetch(url)
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error(`Erreur HTTP ${response.status}`);
-                }
-                return response.json();
-            })
-            .then(data => {
-                if (!data || data.length === 0) {
-                    resultDiv.innerHTML = '<p>Aucune transaction trouvée.</p>';
-                    return;
-                }
-
-                // Création d'un tableau HTML
-                let html = `<table class="striped">
-                <thead>
-                    <tr>
-                        <th>Primary ID</th>
-                        <th>Secondary ID</th>
-                        <th>Event Type</th>
-                        <th>Date</th>
-                        <th>Group ID</th>
-                    </tr>
-                </thead>
-                <tbody>`;
-
-                data.forEach(tx => {
-                    html += `<tr>
-                    <td>${tx.primaryId || ''}</td>
-                    <td>${tx.secondaryId || ''}</td>
-                    <td>${tx.event?.eventType || ''}</td>
-                    <td>${tx.date || ''}</td>
-                    <td>${tx.groupId || ''}</td>
-                </tr>`;
+    <script>
+        function loadRightTable() {
+            fetch('/transactions/incorrect')
+                .then(response => response.json())
+                .then(data => {
+                    console.log(data);
+                    let html = '<table class="striped">';
+                    html += '<thead><tr>' +
+                        '<th>Primary ID</th>' +
+                        '<th>Secondary ID</th>' +
+                        '<th>Event Type</th>' +
+                        '<th>Step Rank</th>' +
+                        '<th>Event Rank</th>' +
+                        '<th>Date</th>' +
+                        '<th>Old Date</th>' +
+                        '</tr></thead><tbody>';
+                    data.forEach(transaction => {
+                        html += `<tr>
+                            <td>${transaction.primary_id || ''}</td>
+                            <td>${transaction.secondary_id || ''}</td>
+                            <td>${transaction.event?.eventType || ''}</td>
+                            <td>${transaction.event?.stepRank || ''}</td>
+                            <td>${transaction.event?.eventRank || ''}</td>
+                            <td>${transaction.date ? isNaN(new Date(transaction.date).getTime())? transaction.date : new Date(transaction.date).getTime()  : ''}</td>
+                            <td>${transaction.previousDate || ''}</td>
+                        </tr>`;
+                    });
+                    html += '</tbody></table>';
+                    document.getElementById('right-result').innerHTML = html;
+                })
+                .catch(error => {
+                    document.getElementById('right-result').innerHTML = "<p style='color:red'>Erreur : " + error.message + "</p>";
                 });
-
-                html += '</tbody></table>';
-                resultDiv.innerHTML = html;
-            })
-            .catch(error => {
-                resultDiv.innerHTML = `<p style="color:red;">Erreur : ${error.message}</p>`;
-            });
-    });
-</script>
+        }
+    </script>
+</div>
 
 </body>
 </html>

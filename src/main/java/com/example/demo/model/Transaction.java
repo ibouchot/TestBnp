@@ -21,6 +21,7 @@ public class Transaction {
     @JoinColumn(name = "event_id")
     public Event event;
     public String date;
+    public String previousDate;
     private boolean correct;
     private String groupId;
 }
